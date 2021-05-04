@@ -29,10 +29,10 @@ class Block:
             
     
     def __str__(self):
-        tab = []
+        tab = {}
         for info in dir(self):
             if not callable(getattr(self, info)) and not info.startswith("__"):
-                tab.append(self[info])
+                tab[info] = self[info]
         return str(tab)
 
     def __getitem__(self, item):

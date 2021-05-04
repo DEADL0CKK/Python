@@ -68,7 +68,18 @@ class Blockchain:
             return 0
     
     def __str__(self):
-        tab = []
-        for oneBlock in self.block:
-            tab.append(oneBlock.__str__())
+        tab = {}
+        for info in dir(self):
+            if not callable(getattr(self, info)) and not info.startswith("__"):
+                if info == "block":
+                    myStr = ""
+                    for oneBlock in self[info]:
+                        myStr += " , " + oneBlock.__str__()
+                    tab[info] = myStr
+        
         return str(tab)
+        
+
+    def __getitem__(self, item):
+        if item == "block":
+            return self.block

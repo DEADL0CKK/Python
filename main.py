@@ -9,7 +9,9 @@ def main():
     bc.add("Pitchoune")
 
     bc.verify_two_block(1)
-    bc.verify_block_content(-1)
+    bc.verify_block_content(3)
+
+    print(bc)
 
     return 1
 
