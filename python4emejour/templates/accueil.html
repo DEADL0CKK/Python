@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Blockchain</h1>
+    <p>Voir une blockchain : </p>
+    <input type="text" name="blockchainName" id="blockchainName">
+    </br>
+    <button id="searchBlockchain" name="searchBlockchain">Search</button>
+</div>
+{# <form method="GET" action="http://localhost:5000/blockchain/block">
+    <h1>Blockchain</h1>
+    <p>Voir une blockchain : </p>
+    <input type="text" name="name">
+</br>
+    <input type="submit">
+</br>
+</form> #}
+<table id="blocks" name="blocks">
+    <tr>
+        <th>INDEX</th>
+        <th>BLOCKCHAINID</th>
+        <th>DATA</th>
+        <th>BLOCKHASH</th>
+        <th>PREVIOUSHASH</th>
+        <th>NONCE</th>
+        <th>TIMESTAMP</th>
+    </tr>
+</table>
+<form method="GET" action="http://localhost:5000/blockchain/all">
+    <h1>Toutes les blockchains</h1>
+    <table id="blockchain" name="table">
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+        </tr>
+    </table>
+</form>
+
+{# <div>
+    {% if user %}
+        {% for el in user %}
+            <p> {{user[el]}} </p>
+        {% endfor %}
+    {% endif %}
+</div> #}
+{% endblock %}
+
+{% block javascript %}
+    <script>
+    var url =  new URL(window.location.href)
+    var parameters = url.searchParams.get("Blockchain")?url.searchParams.get("Blockchain"):null
+    
+    $(document).ready(function(){
+        if (document.cookie.indexOf('login') != -1 && document.cookie.indexOf('token') != -1){
+            login = getCookie('login');
+            token = getCookie('token');
+        }else {
+            window.location.href = "/login"
+        }
+        
+        $.ajax({
+            url:"http://localhost:5000/blockchain/all",
+            dataType:"json",
+            cors:true,
+            headers:{'login' : login, 'token' : token},
+            success:function(data){
+                $(data).each(function(index,value){
+                    var record="<tr><td>"+(value['id'])+"</td><td>"+(value['name'])+"</td></tr>";
+                    $("#blockchain").append(record);
+                });
+            }
+        });
+
+        $('#searchBlockchain').click(() => {
+            infoBlockchain()
+        })
+
+        if(parameters){
+            infoBlockchain(parameters)
+        }
+    })
+
+    function infoBlockchain(blockchainName){
+        document.getElementById('blocks').textContent = ""
+        name = blockchainName?blockchainName:document.getElementById('blockchainName').value
+        if(name){
+            $.ajax({
+                url:"http://localhost:5000/blockchain/block?name="+ name,
+                dataType:"json",
+                headers:{'login' : login, 'token' : token},
+                cors:true,
+                success:function(data){
+                    $("#blocks").append(`<tr>
+                            <th>INDEX</th>
+                            <th>BLOCKCHAINID</th>
+                            <th>DATA</th>
+                            <th>BLOCKHASH</th>
+                            <th>PREVIOUSHASH</th>
+                            <th>NONCE</th>
+                            <th>TIMESTAMP</th>
+                        </tr>`);
+                    $(data['blocks']).each(function(index,value){
+                        console.log(index)
+                        console.log(value)
+                        var record="<tr><td>"+
+                            (value['index'])+
+                            "</td><td>"+
+                            (value['blockchainId'])+
+                            "</td><td>"+
+                            (value['data'])+
+                            "</td><td>"+
+                            (value['blockHash'])+
+                            "</td><td>"+
+                            (value['previousHash'])+
+                            "</td><td>"+
+                            (value['nonce'])+
+                            "</td><td>"+
+                            (value['timestamp'])+
+                            "</td></tr>";
+                        
+                        
+                        $("#blocks").append(record);
+                        console.log("#sousblocks")
+                    });
+                }
+            });
+        }
+    }
+
+    function getCookie(nomCookie) {
+        debut = document.cookie.indexOf(nomCookie+ "=")
+        if (debut >= 0) {
+            debut += nomCookie.length + 1
+            fin = document.cookie.indexOf(";",debut)
+            if (fin < 0) fin = document.cookie.length
+            return unescape(document.cookie.substring(debut,fin))
+        }
+        else 
+            return ""
+    }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,8 @@
+<script>
+    login = "{{user['login']}}";
+    token = "{{user['token']}}";
+    document.cookie= `login = ${login}; path=/`
+    document.cookie= `token = ${token}; path=/`
+
+    window.location.href = "/accueil"
+</script>

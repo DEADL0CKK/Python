@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<h1>Création</h1>
+<div>
+    <h3>Création de la blockchain</h3>
+    <div id="divCreationBlockchain" name="divCreationBlockchain">
+        <label for="newBlockchain">Nom de votre Blockchain :</label>
+        <input type="text" name="newBlockchain" id="newBlockchain">
+        <button id="creationBlockchain" name="creationBlockchain" type="submit">New Blockchain</button>    
+    </div>
+</div>
+<div>
+    <h3>Création d'un block</h3>
+    <div id="divCreationBlock" name="divCreationBlock">
+        <label for="data"> Data de votre block : </label>
+        <input type="text" name="data" id="data">
+        <label> Blockchain de votre block :</label>
+        <input type="text" name="blockchainName" id="blockchainName">
+        <button id="creationBlock" name="creationBlock" type="submit">New Block</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function(){
+        if (document.cookie.indexOf('login') != -1 && document.cookie.indexOf('token') != -1){
+            login = getCookie('login');
+            token = getCookie('token');
+        }else {
+            window.location.href = "/login"
+        }    
+
+        $('#creationBlockchain').click(() => {
+            var newBlockchain = document.getElementById('newBlockchain').value
+            $.ajax({
+                url:"http://localhost:5000/blockchain/create",
+                headers:{'login' : login, 'token' : token},
+                type:'POST',
+                data: 'newBlockchain=' + newBlockchain,
+                dataType : 'html',
+                cors:true,
+                success: function(){
+                    window.location.href="/accueil"
+                }
+            })
+        })
+
+        $('#creationBlock').click(() => {
+            var nameBlockchain = document.getElementById('blockchainName').value
+            var data = document.getElementById('data').value
+            $.ajax({
+                url:"http://localhost:5000/block/create",
+                headers:{'login' : login, 'token' : token},
+                dataType:"html",
+                cors:true,
+                type:'POST',
+                data: 'data='+ data + '&blockchainName='+ nameBlockchain,
+                success: function(){
+                    window.location.href=`/accueil?Blockchain=${nameBlockchain}`
+                }
+                // [object%20HTMLInputElement]
+            });
+        })
+    })
+
+    function getCookie(nomCookie) {
+        debut = document.cookie.indexOf(nomCookie+ "=")
+        if (debut >= 0) {
+            debut += nomCookie.length + 1
+            fin = document.cookie.indexOf(";",debut)
+            if (fin < 0) fin = document.cookie.length
+            return unescape(document.cookie.substring(debut,fin))
+        }
+        else 
+            return ""
+    }
+    </script>
+{% endblock %}
