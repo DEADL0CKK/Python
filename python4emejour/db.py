@@ -72,7 +72,7 @@ def verify_blockchain_content(BlockchainName):
 
             infoBlockchain = {"blockchain":blockchain,"blocks":results}
             connexion.close()
-            return jsonify(infoBlockchain)
+            return infoBlockchain
         else :
             return error_page("La blockchain demandée n'existe pas dans noter base")
 

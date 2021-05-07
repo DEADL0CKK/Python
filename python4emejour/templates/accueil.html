@@ -100,6 +100,7 @@
                 headers:{'login' : login, 'token' : token},
                 cors:true,
                 success:function(data){
+                    document.getElementById("erreurBc").textContent = ""
                     $("#blocks").append(`<tr>
                             <th>INDEX</th>
                             <th>BLOCKCHAINID</th>
@@ -111,7 +112,7 @@
                         </tr>`);
                     if(data['blockchain'] == "erreur"){
                         zone_err = document.getElementById("erreurBc")
-                        zone_err.textContent = data['blocks']
+                        zone_err.textContent = "Erreur : Block invalid <br/>" + data['blocks']
                     }
                     $(data['blocks']).each(function(index,value){
                         var record="<tr><td>"+
