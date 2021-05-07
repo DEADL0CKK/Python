@@ -3,15 +3,28 @@
 {% block head %}
 {% endblock %}
 
+{% block title %} Error
+{% endblock %}
+
 {% block body %}
 
 <div><p>
     Bonjour vous avez rencontré une erreur.
 </p>
 <p>
-    Erreur : {{error}}
+    <span class="error">
+        Erreur : {{error}}
+    </span>
 </p>
 </div>
 
+<script>
+    $(document).ready(function(){
+        $('#deconnexion').click(() => {
+                document.cookie= "login=; expires=Mon, 02 Oct 2000 01:00:00 GMT; path=/"
+                document.cookie= "token=; expires=Mon, 02 Oct 2000 01:00:00 GMT; path=/"
+            })
+    })
+</script>
 
 {% endblock %}

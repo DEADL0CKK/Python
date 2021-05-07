@@ -19,6 +19,7 @@
     <input type="submit">
 </br>
 </form> #}
+<div><span id="erreurBc"></span></div>
 <table id="blocks" name="blocks">
     <tr>
         <th>INDEX</th>
@@ -82,6 +83,11 @@
         if(parameters){
             infoBlockchain(parameters)
         }
+
+        $('#deconnexion').click(() => {
+                document.cookie= "login=; expires=Mon, 02 Oct 2000 01:00:00 GMT; path=/"
+                document.cookie= "token=; expires=Mon, 02 Oct 2000 01:00:00 GMT; path=/"
+            })
     })
 
     function infoBlockchain(blockchainName){
@@ -103,9 +109,11 @@
                             <th>NONCE</th>
                             <th>TIMESTAMP</th>
                         </tr>`);
+                    if(data['blockchain'] == "erreur"){
+                        zone_err = document.getElementById("erreurBc")
+                        zone_err.textContent = data['blocks']
+                    }
                     $(data['blocks']).each(function(index,value){
-                        console.log(index)
-                        console.log(value)
                         var record="<tr><td>"+
                             (value['index'])+
                             "</td><td>"+
@@ -121,10 +129,7 @@
                             "</td><td>"+
                             (value['timestamp'])+
                             "</td></tr>";
-                        
-                        
                         $("#blocks").append(record);
-                        console.log("#sousblocks")
                     });
                 }
             });
